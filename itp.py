@@ -29,7 +29,9 @@ def start_message(message: Message):
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = KeyboardButton("Рассчитать ИМТ")
     btn2 = KeyboardButton("Установить напоминание")
-    markup.add(btn1, btn2)
+    btn3 = KeyboardButton("aliba")
+    btn4 = KeyboardButton("zhanga")
+    markup.add(btn1, btn2, btn3, btn4)
     bot.send_message(message.chat.id, "Выберите, что вы хотите сделать:", reply_markup=markup)
 
 @bot.message_handler(func=lambda message: message.text == "Рассчитать ИМТ")
