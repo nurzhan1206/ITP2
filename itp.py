@@ -1,3 +1,4 @@
+import random
 import telebot
 from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
 import threading
@@ -10,6 +11,17 @@ bot = telebot.TeleBot(TOKEN)
 
 user_data = {}
 reminders = {}
+
+challenges = [
+    "Сделать 100 отжиманий",
+    "Сделать 100 приседаний",
+    "Сделать 50 подтягиваний",
+    "Пробежать 5 км",
+    "Встать в планку на 5 минут",
+    "Отказаться от сладкого на 3 дня",
+    "Сделать 200 прыжков на скакалке",
+    "Пройти 10 000 шагов за день"
+]
 
 def reminder_checker():
     while True:
@@ -29,7 +41,7 @@ def start_message(message: Message):
     bot.send_message(
         message.chat.id,
         "👋 *Привет!* Я бот, который поможет тебе с тренировками и челленджами! 🎯\n\n"
-        "📝 Напиши /challenge, чтобы получить случайное задание!\n"
+        "📝 Помоги нам стать лучше, напиши отзыв сюда /reviews !\n"
         "📌 Также я могу напоминать тебе о тренировках. Напиши 'Установить напоминание'!"
     )
     bot.send_message(message.chat.id, "Как вас зовут?")
@@ -115,7 +127,9 @@ def photo_kcal(message: Message):
 
 @bot.message_handler(func=lambda message: message.text == "🔥 Челлендж дня")
 def challengs(message: Message):
-    bot.send_message(message.chat.id, "🏆 Вот твой случайный челлендж: [здесь будет функция генерации]")
+    challenge = random.choice(challenges)
+    bot.send_message(message.chat.id, f"🔥 Твой челлендж: {challenge}")
+
 
 
 if __name__ == "__main__":
