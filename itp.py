@@ -4,9 +4,14 @@ from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
 import threading
 import time
 from datetime import datetime, timedelta
+import json
 
-TOKEN = "7577574516:AAH0nhJq6nIZ4-4ulLrA27yiqvvb0F1qXog"
-bot = telebot.TeleBot(TOKEN)
+with open("kick.json", "r") as json_file:
+    a = json.load(json_file)
+
+
+TELEGRAM_TOKEN = a["telegram_token"]
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
 user_data = {}
