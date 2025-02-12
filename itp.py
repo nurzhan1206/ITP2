@@ -57,18 +57,7 @@ def reminder_checker():
                     reminders[user_id].remove(reminder)
             if not reminders[user_id]:
                 del reminders[user_id]
-        time.sleep(30)  # Проверяем каждые 30 секунд
-
-#Функция для создания клавиатуры с кнопкой "⬅ Вернуться в меню"
-def menu_keyboard():
-    markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    back_button = KeyboardButton("Готово 🎯")
-    markup.add(back_button)
-    return markup
-
-
-
-
+        time.sleep(30)
 
 @bot.message_handler(commands=['start'])
 def start_message(message: Message):
@@ -100,6 +89,11 @@ def ask_height(message: Message):
 def ask_weight(message: Message):
     try:
         height = float(message.text)
+
+        # Проверка, есть ли user_id в user_data
+        if message.chat.id not in user_data:
+            user_data[message.chat.id] = {}
+
         user_data[message.chat.id]["height"] = height
         bot.send_message(message.chat.id, "⚖️ Теперь введите ваш *вес* (в кг):")
         bot.register_next_step_handler(message, calculate_bmi)
@@ -161,6 +155,7 @@ def photo_kcal(message: Message):
     bot.send_message(message.chat.id, "📷 Сфотографируйте ваш прием пищи!")
 
 @bot.message_handler(func=lambda message: message.text == "🔥 Челлендж дня")
+@bot.message_handler(func=lambda message: message.text == "🔥 Челлендж дня")
 def give_challenge(message):
     user_id = str(message.chat.id)
     today = datetime.now().strftime("%Y-%m-%d")
@@ -172,7 +167,9 @@ def give_challenge(message):
         bot.send_message(user_id, "⚠ Ты уже взял 3 челленджа на сегодня! Попробуй завтра 💪")
         return
 
-    challenge = random.choice(challenges)
+    available_challenges = [ch for ch in challenges if ch not in user_data[user_id]["active"]]
+
+    challenge = random.choice(available_challenges)
     user_data[user_id]["active"].append(challenge)
     user_data[user_id]["last_challenge_date"] = today
     user_data[user_id]["challenge_count"] += 1
@@ -185,6 +182,7 @@ def give_challenge(message):
 
     bot.send_message(user_id, f"🔥 Твой челлендж: {challenge}\n\n"
                               "Когда ты его выполнишь, нажми на кнопку ниже 👇", reply_markup=markup)
+
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("done_"))
 def complete_challenge(call):
