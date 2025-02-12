@@ -155,7 +155,6 @@ def photo_kcal(message: Message):
     bot.send_message(message.chat.id, "📷 Сфотографируйте ваш прием пищи!")
 
 @bot.message_handler(func=lambda message: message.text == "🔥 Челлендж дня")
-@bot.message_handler(func=lambda message: message.text == "🔥 Челлендж дня")
 def give_challenge(message):
     user_id = str(message.chat.id)
     today = datetime.now().strftime("%Y-%m-%d")
